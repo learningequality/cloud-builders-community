@@ -17,16 +17,16 @@ func Notify(b *cloudbuild.Build, webhook string) {
 	var i string
 	switch b.Status {
 	case "SUCCESS":
-		i = ":white_check_mark:"
+		i = fmt.Sprintf(":white_check_mark: %s\n<%s> is going to be turned down.", b.Status, server)
 	case "FAILURE", "CANCELLED":
-		i = ":x:"
+		i = fmt.Sprintf(":x: %s\nPlease try again later.", b.Status)
 	case "STATUS_UNKNOWN", "INTERNAL_ERROR":
-		i = ":interrobang:"
+		i = fmt.Sprintf(":interrobang: %s", b.Status)
 	default:
-		i = ":question:"
+		i = fmt.Sprintf(":question: %s", b.Status)
 	}
 	j := fmt.Sprintf(
-		`{"text": "Cloud Build %s complete: %s %s\nServer <%s> is going to be turned down.\nIf the build fails, please try again later.",
+		`{"text": "Cloud Build %s complete: %s",
 		    "attachments": [
 				{
 					"fallback": "Open build details at %s",
@@ -38,7 +38,7 @@ func Notify(b *cloudbuild.Build, webhook string) {
 						}
 					]
 				}
-			]}`, b.Id, i, b.Status, server, url, url)
+			]}`, b.Id, i, url, url)
 
 	r := strings.NewReader(j)
 	resp, err := http.Post(webhook, "application/json", r)
