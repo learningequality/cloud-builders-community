@@ -17,7 +17,7 @@ func Notify(b *cloudbuild.Build, webhook string) {
 	var i string
 	switch b.Status {
 	case "SUCCESS":
-		i = fmt.Sprintf(":white_check_mark: %s\n<%s> is going to be turned down.", b.Status, server)
+		i = fmt.Sprintf(":white_check_mark: %s\n<%s> is going to be turned off.", b.Status, server)
 	case "FAILURE", "CANCELLED":
 		i = fmt.Sprintf(":x: %s\nPlease try again later.", b.Status)
 	case "STATUS_UNKNOWN", "INTERNAL_ERROR":
